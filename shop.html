@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Chickens | Chicken Haven</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <span class="chicken-icon">🐔</span>
+        <span>Chicken Haven</span>
+      </div>
+      <button class="nav-toggle" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop Chickens</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" position="relative">
+          🛒 <span class="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="section-header" style="text-align: left; max-width: 1200px; margin: 0 auto 2rem; padding: 0 20px;">
+      <h2>Shop Chickens</h2>
+      <p>Browse our available chickens by age category</p>
+    </div>
+
+    <div class="categories-grid" style="max-width: 1200px; margin: 0 auto 3rem; padding: 0 20px;">
+      <div class="category-card" onclick="filterCategory('4-months')" style="cursor: pointer;">
+        <div class="category-image">
+          <img src="iMAGE/4 MONTHS.jpg" alt="4 month old chickens">
+        </div>
+        <div class="category-content">
+          <h3>4-Month-Old Chickens</h3>
+          <p>Young pullets, ready to grow with your farm</p>
+          <span class="category-tag">Select Category</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterCategory('5-months')" style="cursor: pointer;">
+        <div class="category-image">
+          <img src="iMAGE/5 months.jpg" alt="5 month old chickens">
+        </div>
+        <div class="category-content">
+          <h3>5-Month-Old Chickens</h3>
+          <p>Near laying age, healthy and active</p>
+          <span class="category-tag">Select Category</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterCategory('6-months')" style="cursor: pointer;">
+        <div class="category-image">
+          <img src="iMAGE/6 months.jpg" alt="6 month and older chickens">
+        </div>
+        <div class="category-content">
+          <h3>6 Months and Older</h3>
+          <p>Mature hens, proven egg layers</p>
+          <span class="category-tag">Select Category</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+        <h3 id="categoryTitle">All Chickens</h3>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline btn-sm" onclick="filterCategory('all')">All</button>
+          <button class="btn btn-outline btn-sm" onclick="filterCategory('4-months')">4 Months</button>
+          <button class="btn btn-outline btn-sm" onclick="filterCategory('5-months')">5 Months</button>
+          <button class="btn btn-outline btn-sm" onclick="filterCategory('6-months')">6+ Months</button>
+        </div>
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <!-- Products injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>🐔 Chicken Haven</h3>
+        <p>Your trusted source for farm-raised chickens in the Philippines. Quality poultry, delivered with care.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop Chickens</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="cart.html">Shopping Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li>📍 Luzon, Philippines</li>
+          <li>📞 +63 9XX XXX XXXX</li>
+          <li>✉️ info@chickenhaven.ph</li>
+          <li>🕒 Mon–Sat: 8:00 AM – 5:00 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Chicken Haven. Demonstration site for educational purposes.</p>
+    </div>
+  </footer>
+
+  <script src="data/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.getElementById('navLinks');
+
+      navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialCategory = urlParams.get('category') || 'all';
+
+      let currentFilter = initialCategory;
+
+      const categoryTitle = document.getElementById('categoryTitle');
+      const categoryLabels = {
+        'all': 'All Chickens',
+        '4-months': '4-Month-Old Chickens',
+        '5-months': '5-Month-Old Chickens',
+        '6-months': '6 Months and Older'
+      };
+
+      function renderProducts(filter) {
+        currentFilter = filter;
+        const products = getProducts();
+        const grid = document.getElementById('productsGrid');
+        const title = document.getElementById('categoryTitle');
+
+        let filtered = products;
+        if (filter !== 'all') {
+          filtered = products.filter(p => p.category === filter);
+        }
+
+        categoryTitle.textContent = categoryLabels[filter] || 'All Chickens';
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🐔</div>
+              <h3>No chickens available</h3>
+              <p>No chickens found in this category.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(p => `
+          <div class="product-card">
+            <div class="product-image">
+              <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x220/4a7c59/ffffff?text=Chicken'">
+              <span class="product-badge">${p.age}</span>
+              ${p.stock <= 0 ? '<span class="product-stock out">Out of Stock</span>' : '<span class="product-stock">In Stock</span>'}
+            </div>
+            <div class="product-info">
+              <h3>${p.name}</h3>
+              <div class="product-breed">${p.breed}</div>
+              <div class="product-age">${p.age}</div>
+              <div class="product-price">₱${p.price.toLocaleString()}</div>
+              <p class="product-description">${p.description}</p>
+              <div class="product-actions">
+                <a href="product.html?id=${p.id}" class="btn btn-outline btn-sm">View Details</a>
+                ${p.stock > 0 ? `<button class="btn btn-primary btn-sm" onclick="addToCart(${p.id})">Add to Cart</button>` : '<button class="btn btn-secondary btn-sm" disabled>Out of Stock</button>'}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderProducts(initialFilter);
+
+      window.filterCategory = renderProducts;
+    });
+  </script>
+</body>
+</html>

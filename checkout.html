@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Chicken Haven</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <span class="chicken-icon">🐔</span>
+        <span>Chicken Haven</span>
+      </div>
+      <button class="nav-toggle" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop Chickens</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" position="relative">
+          🛒 <span class="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div id="checkoutFormContainer">
+      <div class="checkout-header">
+        <h2>Checkout</h2>
+        <p>Complete your order</p>
+      </div>
+
+      <div class="checkout-grid">
+        <div class="checkout-form">
+          <div class="cart-notice">
+            🐔 <strong>Demonstration checkout:</strong> This is a demo site. No real payment is processed. Orders are stored locally for demonstration purposes only.
+          </div>
+          <form id="checkoutForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name <span style="color: #e74c3c;">*</span></label>
+                <input type="text" id="firstName" required>
+                <div class="error-text" id="firstNameError">Please enter your first name</div>
+              </div>
+              <div class="form-group">
+                <label>Last Name <span style="color: #e74c3c;">*</span></label>
+                <input type="text" id="lastName" required>
+                <div class="error-text" id="lastNameError">Please enter your last name</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Contact Number <span style="color: #e74c3c;">*</span></label>
+              <input type="tel" id="phone" required placeholder="+63 9XX XXX XXXX">
+              <div class="error-text" id="phoneError">Please enter a valid phone number</div>
+            </div>
+            <div class="form-group">
+              <label>Delivery Address <span style="color: #e74c3c;">*</span></label>
+              <textarea id="address" rows="3" required placeholder="Street, Barangay, City, Province"></textarea>
+              <div class="error-text" id="addressError">Please enter your delivery address</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Place Order</button>
+          </form>
+        </div>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div id="checkoutItems">
+            <!-- Cart items injected by JS -->
+          </div>
+          <div class="checkout-total">
+            Total: <span id="checkoutTotal">₱0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirmationContainer" class="hidden">
+      <div class="confirmation">
+        <div class="confirmation-card">
+          <div class="confirmation-icon">✅</div>
+          <h2>Order Confirmed!</h2>
+          <p>Thank you for your order, <span id="confirmName"></span>!</p>
+          <div class="confirmation-details">
+            <p><strong>Order Number:</strong> <span id="confirmOrderNum"></span></p>
+            <p><strong>Delivery Address:</strong> <span id="confirmAddress"></span></p>
+            <p><strong>Contact Number:</strong> <span id="confirmPhone"></span></p>
+            <p><strong>Total:</strong> <span id="confirmTotal">₱0</span></p>
+          </div>
+          <div class="cart-notice" style="font-size: 0.8rem; margin-top: 1.5rem;">
+            This is a demonstration order. No real payment has been processed. Contact Chicken Haven to confirm your order.
+          </div>
+          <button class="btn btn-primary btn-full" onclick="location.href='index.html'">Back to Home</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>🐔 Chicken Haven</h3>
+        <p>Your trusted source for farm-raised chickens in the Philippines. Quality poultry, delivered with care.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop Chickens</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="cart.html">Shopping Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li>📍 Luzon, Philippines</li>
+          <li>📞 +63 9XX XXX XXXX</li>
+          <li>✉️ info@chickenhaven.ph</li>
+          <li>🕒 Mon–Sat: 8:00 AM – 5:00 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Chicken Haven. Demonstration site for educational purposes.</p>
+    </div>
+  </footer>
+
+  <script src="data/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.getElementById('navLinks');
+      navToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+
+      const cart = getCart();
+      const itemsContainer = document.getElementById('checkoutItems');
+      const totalEl = document.getElementById('checkoutTotal');
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Your cart is empty.</p>';
+        totalEl.textContent = '₱0';
+      } else {
+        itemsContainer.innerHTML = cart.map(item => `
+          <div class="order-item">
+            <span class="order-item-name">${item.name} × ${item.quantity}</span>
+            <span class="order-item-price">₱${(item.price * item.quantity).toLocaleString()}</span>
+          </div>
+        `).join('');
+        totalEl.textContent = '₱' + getCartTotal().toLocaleString();
+      }
+
+      const form = document.getElementById('checkoutForm');
+      const fields = [
+        { id: 'firstName', errorId: 'firstNameError', validate: v => v.trim().length > 0 },
+        { id: 'lastName', errorId: 'lastNameError', validate: v => v.trim().length > 0 },
+        { id: 'phone', errorId: 'phoneError', validate: v => v.trim().length > 0 },
+        { id: 'address', errorId: 'addressError', validate: v => v.trim().length > 0 }
+      ];
+
+      fields.forEach(f => {
+        const input = document.getElementById(f.id);
+        const error = document.getElementById(f.errorId);
+        input.addEventListener('input', () => {
+          if (f.validate(input.value)) {
+            input.classList.remove('error');
+            error.style.display = 'none';
+          } else {
+            input.classList.add('error');
+            error.style.display = 'block';
+          }
+        });
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let valid = true;
+        fields.forEach(f => {
+          const input = document.getElementById(f.id);
+          const error = document.getElementById(f.errorId);
+          if (!f.validate(input.value)) {
+            input.classList.add('error');
+            error.style.display = 'block';
+            valid = false;
+          } else {
+            input.classList.remove('error');
+            error.style.display = 'none';
+          }
+        });
+
+        if (!valid) return;
+
+        const order = {
+          id: Date.now(),
+          date: new Date().toISOString(),
+          customer: {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value
+          },
+          items: [...getCart()],
+          total: getCartTotal(),
+          status: 'pending',
+          demo: true
+        };
+
+        const orders = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) || '[]');
+        orders.push(order);
+        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orders));
+
+        document.getElementById('confirmName').textContent = order.customer.firstName;
+        document.getElementById('confirmOrderNum').textContent = order.id;
+        document.getElementById('confirmAddress').textContent = order.customer.address;
+        document.getElementById('confirmPhone').textContent = order.customer.phone;
+        document.getElementById('confirmTotal').textContent = '₱' + order.total.toLocaleString();
+
+        clearCart();
+        updateCartBadge();
+
+        document.getElementById('checkoutFormContainer').classList.add('hidden');
+        document.getElementById('confirmationContainer').classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

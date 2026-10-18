@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | Chicken Haven</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <span class="chicken-icon">🐔</span>
+        <span>Chicken Haven</span>
+      </div>
+      <button class="nav-toggle" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop Chickens</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" position="relative">
+          🛒 <span class="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+      <div class="product-detail-image">
+        <img id="mainImage" src="" alt="" style="width: 100%; border-radius: var(--radius); box-shadow: var(--shadow);">
+      </div>
+      <div class="product-detail-info">
+        <span class="product-badge" style="display: inline-block; margin-bottom: 1rem; background: var(--primary-green); color: white; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600;" id="detailAge"></span>
+        <h1 id="detailName" style="font-size: 2rem; color: var(--primary-green-dark); margin-bottom: 0.5rem;"></h1>
+        <div class="product-breed" style="color: var(--primary-green-dark); font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem;" id="detailBreed"></div>
+        <div class="product-age" style="color: var(--text-muted); margin-bottom: 1rem;" id="detailAgeText"></div>
+        <div class="product-price" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-green-dark); margin-bottom: 1rem;" id="detailPrice"></div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.7;" id="detailDesc"></p>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="color: var(--primary-green-dark); margin-bottom: 0.75rem;">Physical Characteristics</h4>
+          <p style="color: var(--text-muted);" id="detailChars"></p>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="color: var(--primary-green-dark); margin-bottom: 0.75rem;">Availability</h4>
+          <span id="detailStock" style="padding: 6px 12px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;"></span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark);">Quantity</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input type="number" id="detailQty" value="1" min="1" max="99" style="width: 60px; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center;">
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="addToCartDetail()" id="addToCartBtn">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>🐔 Chicken Haven</h3>
+        <p>Your trusted source for farm-raised chickens in the Philippines. Quality poultry, delivered with care.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop Chickens</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="cart.html">Shopping Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li>📍 Luzon, Philippines</li>
+          <li>📞 +63 9XX XXX XXXX</li>
+          <li>✉️ info@chickenhaven.ph</li>
+          <li>🕒 Mon–Sat: 8:00 AM – 5:00 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Chicken Haven. Demonstration site for educational purposes.</p>
+    </div>
+  </footer>
+
+  <script src="data/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.getElementById('navLinks');
+      navToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = parseInt(urlParams.get('id'));
+
+      const products = getProducts();
+      const product = products.find(p => p.id === productId);
+
+      if (!product) {
+        document.querySelector('section.section').innerHTML = `
+          <div style="max-width: 600px; margin: 4rem auto; padding: 0 20px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🐔</div>
+            <h2>Chicken not found</h2>
+            <p>The chicken you're looking for doesn't exist.</p>
+            <a href="shop.html" class="btn btn-primary">Browse Chickens</a>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('mainImage').src = product.image;
+      document.getElementById('mainImage').alt = product.name;
+      document.getElementById('detailName').textContent = product.name;
+      document.getElementById('detailBreed').textContent = product.breed;
+      document.getElementById('detailAge').textContent = product.age;
+      document.getElementById('detailAgeText').textContent = product.age;
+      document.getElementById('detailPrice').textContent = '₱' + product.price.toLocaleString();
+      document.getElementById('detailDesc').textContent = product.description;
+      document.getElementById('detailChars').textContent = product.characteristics;
+
+      const stockEl = document.getElementById('detailStock');
+      if (product.stock > 0) {
+        stockEl.textContent = 'In Stock (' + product.stock + ' available)';
+        stockEl.style.background = '#e8f5e9';
+        stockEl.style.color = 'var(--primary-green-dark)';
+      } else {
+        stockEl.textContent = 'Out of Stock';
+        stockEl.style.background = '#fdecea';
+        stockEl.style.color = '#e74c3c';
+      }
+
+      const qtyInput = document.getElementById('detailQty');
+      const addBtn = document.getElementById('addToCartBtn');
+
+      if (product.stock <= 0) {
+        addBtn.disabled = true;
+        addBtn.textContent = 'Out of Stock';
+        qtyInput.disabled = true;
+      }
+
+      qtyInput.max = product.stock;
+
+      window.changeQty = function(delta) {
+        let val = parseInt(qtyInput.value) + delta;
+        if (val < 1) val = 1;
+        if (val > product.stock) val = product.stock;
+        qtyInput.value = val;
+      };
+
+      window.addToCartDetail = function() {
+        const qty = parseInt(qtyInput.value);
+        if (addToCart(product.id, qty)) {
+          addBtn.textContent = 'Added to Cart!';
+          addBtn.style.background = 'var(--primary-green-dark)';
+          setTimeout(() => {
+            addBtn.textContent = 'Add to Cart';
+            addBtn.style.background = 'var(--primary-green)';
+          }, 1500);
+        }
+      };
+    });
+  </script>
+</body>
+</html>

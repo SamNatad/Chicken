@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | Chicken Haven</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <span class="chicken-icon">🐔</span>
+        <span>Chicken Haven</span>
+      </div>
+      <button class="nav-toggle" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop Chickens</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" position="relative">
+          🛒 <span class="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="cart-header">
+      <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+        <h2>Your Cart</h2>
+        <div class="cart-notice">
+          🐔 <strong>Demonstration store:</strong> This cart uses browser local storage. Your items will be saved even if you refresh the page, but no real payment is processed.
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-container">
+      <div id="cartItems">
+        <!-- Cart items injected by JS -->
+      </div>
+      <div id="cartSummary">
+        <!-- Cart summary injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>🐔 Chicken Haven</h3>
+        <p>Your trusted source for farm-raised chickens in the Philippines. Quality poultry, delivered with care.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop Chickens</a></li>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="cart.html">Shopping Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li>📍 Luzon, Philippines</li>
+          <li>📞 +63 9XX XXX XXXX</li>
+          <li>✉️ info@chickenhaven.ph</li>
+          <li>🕒 Mon–Sat: 8:00 AM – 5:00 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Chicken Haven. Demonstration site for educational purposes.</p>
+    </div>
+  </footer>
+
+  <script src="data/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.getElementById('navLinks');
+      navToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+
+      renderCartItems('cartItems', 'cartSummary');
+    });
+  </script>
+</body>
+</html>
